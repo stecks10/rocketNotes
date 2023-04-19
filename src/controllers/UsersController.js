@@ -34,22 +34,16 @@ class UserController {
       throw new AppError('User not found');
     }
 
-    const userWithUpdateEmail = await database.get('SELECT * FROM users WHERE email = (?)', [email]);
-
-    if (userWithUpdateEmail && userWithUpdateEmail.id !== user.id) {
-      throw new AppError('E-mail already exists');
-    }
-
     user.name = name;
     user.email = email;
 
     await database.run(`
-      UPDATE users SET
-      name = ?,
-      email = ?,
-      update_at = ?,
-      where id = ?`,
-      [user.name, user.email, new Date(), user.id]
+    UPDATE users SET
+    name = ?,
+    email = ?,
+    updated_at = ?
+    WHERE id = ?`,
+      [user.name, user.email, new Date(), id]
     );
 
     return response.json();
