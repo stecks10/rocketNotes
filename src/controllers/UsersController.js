@@ -34,8 +34,8 @@ class UserController {
       throw new AppError('User not found');
     }
 
-    user.name = name;
-    user.email = email;
+    user.name = name ?? user.name;
+    user.email = email ?? user.email;
 
     if (password && !old_password) {
       throw new AppError("voce precisa informar a senha antiga para definir a nova senha.")
