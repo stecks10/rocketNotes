@@ -7,7 +7,7 @@ module.exports = {
       filename: path.resolve(__dirname, "src", "database", "database.db")
     },
     pool: {
-      afterCreate: (conn, done) => {
+      afterCreate: (conn, cb) => {
         conn.run("PRAGMA foreign_keys = ON", cb);
       }
     },
