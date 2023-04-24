@@ -1,11 +1,10 @@
 import { Container } from './styles';
 
 // eslint-disable-next-line react/prop-types
-export function Tag({ title }) {
+export function ButtonText({ title, ...rest }) {
   return (
-    <Container>
+    <Container {...rest} type='button'>
       {title}
     </Container>
   )
-
 }
