@@ -4,8 +4,7 @@ import { Input } from '../../components/Input';
 import { TextArea } from '../../components/TextArea';
 import { NoteItem } from '../../components/NoteItem';
 import { Section } from '../../components/Section';
-
-
+import { Button } from '../../components/Button';
 
 export function New() {
   return (
@@ -26,8 +25,17 @@ export function New() {
           <Section title="Links Úteis">
             <NoteItem value="https://rocketseat.com.br" />
             <NoteItem isNew placeholder="Novo link" />
+          </Section>
+
+          <Section title="Marcadores">
+            <div className='tags'>
+              <NoteItem value="React" />
+              <NoteItem isNew placeholder="Nova tag" />
+            </div>
 
           </Section>
+
+          <Button title="Salvar" />
         </Form>
       </main>
     </Container>
