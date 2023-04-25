@@ -1,8 +1,17 @@
-class SessionsController {
-  async create(req, res) {
-    const { email, password } = req.body;
+const knex = require('../database/knex');
+const AppError = require('../utils/AppError');
 
-    return res.json({ email, password });
+class SessionsController {
+  async create(request, response) {
+    const { email, password } = request.body;
+
+    const user = await knex('users').where({ email }).first();
+
+    if (!user) {
+      throw new AppError('Email e/ou senha incorretos.', 401);
+    }
+
+    return response.json(user);
   }
 }
 
