@@ -1,5 +1,5 @@
 const { verify } = require('jsonwebtoken');
-const AppError = require('../utils/appError');
+const AppError = require('../utils/AppError');
 const authConfig = require('../configs/auth');
 
 function ensureAuthenticated(req, res, next) {
@@ -23,5 +23,4 @@ function ensureAuthenticated(req, res, next) {
     throw new AppError('JWT Token inválido', 401);
   }
 }
-
 module.exports = ensureAuthenticated;
