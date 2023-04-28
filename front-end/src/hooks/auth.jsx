@@ -46,8 +46,19 @@ function AuthProvider({ children }) {
     }
   }, []);
 
+  function signOut() {
+    localStorage.removeItem("@rocketnotes:user");
+    localStorage.removeItem("@rocketnotes:token");
+
+    setData({});
+  }
+
   return (
-    <AuthContext.Provider value={{ signIn, user: data.user }}>
+    <AuthContext.Provider value={{
+      signIn,
+      user: data.user,
+      signOut
+    }}>
       {children}
     </AuthContext.Provider>
   );
