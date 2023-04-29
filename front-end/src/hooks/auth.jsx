@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect } from 'react'
 import { api } from '../services/api'
 export const AuthContext = createContext({})
 
+// eslint-disable-next-line react/prop-types
 function AuthProvider({ children }) {
 
   const [data, setData] = useState({})
@@ -42,7 +43,7 @@ function AuthProvider({ children }) {
         fileUploadForm.append("avatar", avatarFile)
 
         const response = await api.patch("/users/avatar", fileUploadForm)
-        user.avatar = response.data.avatar
+        user.avatar = response.data.avatar;
       }
 
       await api.put("/users", user)
