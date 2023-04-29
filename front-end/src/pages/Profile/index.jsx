@@ -7,9 +7,12 @@ import { Button } from '../../components/Button';
 import { FiArrowLeft, FiUser, FiMail, FiLock, FiCamera } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 import { api } from '../../services/api';
+import { useNavigate } from 'react-router-dom';
+
 
 export function Profile() {
   const { user, updateProfile } = useAuth();
+  const navigate = useNavigate();
 
   const [name, setName] = useState(user.name);
   const [email, setEmail] = useState(user.email);
@@ -32,6 +35,8 @@ export function Profile() {
       user,
       avatarFile
     })
+
+    navigate("/")
   }
 
   function handleChangeAvatar(event) {
