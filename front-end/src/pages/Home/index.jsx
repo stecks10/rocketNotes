@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { api } from '../../services/api'; ``
+import { useNavigate } from 'react-router-dom';
 import { Header } from '../../components/Header';
 import { FiPlus, FiSearch } from 'react-icons/fi';
 import { ButtonText } from '../../components/ButtonText';
@@ -14,6 +15,8 @@ export function Home() {
   const [tagsSelected, setTagsSelected] = useState([]);
   const [notes, setNotes] = useState([]);
 
+  const navigate = useNavigate();
+
   function handleTagsSelected(tagName) {
     if (tagName === "all") {
       return setTagsSelected([]);
@@ -27,6 +30,10 @@ export function Home() {
     } else {
       setTagsSelected(prevState => [...prevState, tagName]);
     }
+  }
+
+  function handleDetails(id) {
+    navigate(`/details/${id}`);
   }
 
   useEffect(() => {
@@ -81,7 +88,7 @@ export function Home() {
         <Section title="Minhas notas">
           {
             notes.map(note => (
-              <Note key={String(note.id)} data={note} />
+              <Note key={String(note.id)} data={note} onClick={() => handleDetails(note.id)} />
             ))
           }
         </Section>
