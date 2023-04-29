@@ -22,7 +22,7 @@ export function SignUp() {
     await api.post("/users", { name, email, password })
       .then(() => {
         alert("Cadastro realizado com sucesso!");
-        navigate("/");
+        navigate(-1);
       })
       .catch(error => {
         alert(error.response.data.message);

@@ -15,7 +15,7 @@ export function Details() {
   const navigate = useNavigate();
 
   function handleBack() {
-    navigate('/');
+    navigate(-1);
   }
 
   function handleRemove() {
@@ -23,7 +23,7 @@ export function Details() {
 
     if (confirm) {
       api.delete(`/notes/${params.id}`);
-      navigate('/');
+      navigate(-1);
     }
   }
 
