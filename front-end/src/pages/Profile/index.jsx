@@ -19,7 +19,7 @@ export function Profile() {
       name,
       email,
       password: passwordNew,
-      passwordOld: passwordOld,
+      old_password: passwordOld
     }
 
     await updateProfile({

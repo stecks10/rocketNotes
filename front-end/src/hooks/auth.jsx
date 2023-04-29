@@ -1,95 +1,95 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react'
+import { api } from '../services/api'
+export const AuthContext = createContext({})
 
-import { api } from '../services/api';
-
-export const AuthContext = createContext({});
-
-// eslint-disable-next-line react/prop-types
 function AuthProvider({ children }) {
-  const [data, setData] = useState({});
+
+  const [data, setData] = useState({})
+
   async function signIn({ email, password }) {
-
     try {
-      const response = await api.post('/sessions', {
-        email,
-        password,
-      });
+      const response = await api.post("/sessions", { email, password })
+      const { user, token } = response.data
 
-      const { user, token } = response.data;
+      localStorage.setItem("@rocketnotes:user", JSON.stringify(user))
+      localStorage.setItem("@rocketnotes:token", token)
 
-      localStorage.setItem("@rocketnotes:user", JSON.stringify(user));
-      localStorage.setItem("@rocketnotes:token", token);
+      api.defaults.headers.common['Authorization'] = `Bearer ${token}`
 
-      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      setData({ user, token })
 
-      setData({ user, token });
     } catch (error) {
       if (error.response) {
-        alert(error.response.data.message);
+        alert(error.response.data.message)
       } else {
-        alert('Erro no login, tente novamente');
+        alert("Não foi possível entrar.")
       }
     }
   }
 
   function signOut() {
-    localStorage.removeItem("@rocketnotes:user");
-    localStorage.removeItem("@rocketnotes:token");
+    localStorage.removeItem("@rocketnotes:token")
+    localStorage.removeItem("@rocketnotes:user")
 
-    setData({});
+    setData({})
   }
 
-  async function updateProfile({ user }) {
+  async function updateProfile({ user, avatarFile }) {
     try {
-      await api.put('/users', user);
-      localStorage.setItem("@rocketnotes:user", JSON.stringify(user));
 
-      setData({
-        user,
-        token: data.token,
-      })
+      if (avatarFile) {
+        const fileUploadForm = new FormData()
+        fileUploadForm.append("avatar", avatarFile)
 
-      alert("Perfil atualizado")
+        const response = await api.patch("/users/avatar", fileUploadForm)
+        user.avatar = response.data.avatar
+      }
+
+      await api.put("/users", user)
+      localStorage.setItem("@rocketnotes:user", JSON.stringify(user))
+
+      setData({ user, token: data.token })
+      alert("Perfil atualizado!")
 
     } catch (error) {
       if (error.response) {
-        alert(error.response.data.message);
+        alert(error.response.data.message)
       } else {
-        alert('Nao foi possível atualizar seu perfil, tente novamente');
+        alert("Não foi possível atualizar o perfil.")
       }
     }
   }
 
   useEffect(() => {
-    const token = localStorage.getItem("@rocketnotes:token");
-    const user = localStorage.getItem("@rocketnotes:user");
+    const token = localStorage.getItem("@rocketnotes:token")
+    const user = localStorage.getItem("@rocketnotes:user")
 
     if (token && user) {
-      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      api.defaults.headers.common['Authorization'] = `Bearer ${token}`
 
       setData({
         token,
-        user: JSON.parse(user),
+        user: JSON.parse(user)
       })
     }
-  }, []);
+  }, [])
 
   return (
     <AuthContext.Provider value={{
       signIn,
       signOut,
-      user: data.user,
       updateProfile,
+      user: data.user
     }}>
       {children}
     </AuthContext.Provider>
-  );
+  )
 }
 
 function useAuth() {
-  const context = useContext(AuthContext);
+  const context = useContext(AuthContext)
 
-  return context;
+  return context
 }
 
-export { AuthProvider, useAuth };
+export { AuthProvider, useAuth } 
