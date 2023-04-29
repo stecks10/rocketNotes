@@ -1,37 +1,81 @@
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Button } from '../../components/Button';
 import { Header } from '../../components/Header';
 import { Section } from '../../components/Section';
 import { ButtonText } from '../../components/ButtonText';
 import { Tag } from '../../components/Tag';
 import { Container, Links, Content } from './styles';
+import { api } from '../../services/api';
 
 export function Details() {
+  const [data, setData] = useState(null);
+  const params = useParams();
+  const navigate = useNavigate();
+
+  function handleBack() {
+    navigate('/');
+  }
+
+  useEffect(() => {
+    async function fetchNote() {
+      const response = await api.get(`/notes/${params.id}`);
+      setData(response.data);
+    }
+    fetchNote();
+  }, []);
+
   return (
     <Container>
       <Header />
+      {
+        data && (
+          <main>
+            <Content>
+              <ButtonText title="Excluir nota" />
 
-      <main>
-        <Content>
-          <ButtonText title="Excluir nota" />
+              <h1>{data.title}</h1>
+              <p>{data.description}</p>
 
-          <h1>Introdução ao React</h1>
-          <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Architecto quos est laboriosam, iste aut quas iure non dolore aliquid commodi ipsam porro tempore cum itaque eum dignissimos perspiciatis modi sit.
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat sapiente dicta quo iusto, vero, quis expedita sunt sit, accusantium et consequuntur quia. Cupiditate ullam provident maiores earum assumenda omnis excepturi.</p>
+              {
+                data.links &&
+                <Section title="Link uteis">
+                  <Links>
+                    {
+                      data.links.map(link => {
+                        const url = link.url.startsWith('http://') || link.url.startsWith('https://') ? link.url : 'http://' + link.url;
+                        return (
+                          <li key={String(link.id)}>
+                            <a href={url} target='_blank' rel="noreferrer">
+                              {link.url}
+                            </a>
+                          </li>
+                        );
+                      })
+                    }
+                  </Links>
+                </Section>
 
-          <Section title="Link uteis">
-            <Links>
-              <li><a href='#'>https://www.google.com.br</a></li>
-              <li><a href='#'>https://www.google.com.br</a></li>
-            </Links>
-          </Section>
-          <Section title="Marcadores">
-            <Tag title="express" />
-            <Tag title="note" />
-          </Section>
+              }
 
-          <Button title="Voltar" />
-        </Content>
-      </main>
+              {
+                data.tags &&
+                <Section title="Marcadores">
+                  {
+                    data.tags.map(tag => (
+                      <Tag key={String(tag.id)} title={tag.name} />
+                    ))
+                  }
+                </Section>
+              }
+
+              <Button title="Voltar" onClick={handleBack} />
+            </Content>
+          </main>
+        )
+      }
+
     </Container>
   );
 }
