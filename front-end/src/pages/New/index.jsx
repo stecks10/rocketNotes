@@ -9,6 +9,7 @@ import { Button } from '../../components/Button';
 import { Link } from 'react-router-dom';
 import { api } from '../../services/api';
 import { useNavigate } from 'react-router-dom';
+
 export function New() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -61,12 +62,11 @@ export function New() {
       description,
       tags,
       links
-    })
+    });
 
     alert("Nota criada com sucesso!")
     navigate("/")
   }
-
 
   return (
     <Container>
